@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jackson Gister</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --scarlet: #CC0033;
+      --scarlet-dark: #990022;
+      --off-white: #F4F1EC;
+      --cream: #EDE9E1;
+      --charcoal: #1A1A1A;
+      --mid: #3A3A3A;
+      --muted: #7A7268;
+      --line: rgba(0,0,0,0.10);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--off-white);
+      color: var(--charcoal);
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 999;
+      opacity: 0.35;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 3rem;
+      background: rgba(244,241,236,0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.12em;
+      color: var(--charcoal);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--scarlet); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--scarlet); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 80px;
+    }
+    .hero-left {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 6rem 3rem 6rem 6rem;
+      position: relative;
+    }
+    .hero-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--scarlet);
+      margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .hero-tag::before {
+      content: '';
+      display: block; width: 2rem; height: 1px;
+      background: var(--scarlet);
+    }
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 8vw, 7.5rem);
+      line-height: 0.92;
+      letter-spacing: 0.01em;
+      color: var(--charcoal);
+      margin-bottom: 2rem;
+    }
+    h1 .line-accent { color: var(--scarlet); display: block; }
+    .hero-sub {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 380px;
+      margin-bottom: 2.5rem;
+    }
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: 0.75rem;
+      background: var(--scarlet);
+      color: #fff;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.9rem 1.75rem;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .hero-cta:hover { background: var(--scarlet-dark); transform: translateY(-2px); }
+    .hero-cta svg { transition: transform 0.2s; }
+    .hero-cta:hover svg { transform: translateX(4px); }
+
+    .hero-right {
+      background: var(--charcoal);
+      position: relative;
+      overflow: hidden;
+      display: flex; align-items: flex-end;
+    }
+    .hero-right::after {
+      content: 'RU';
+      position: absolute;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32vw;
+      color: rgba(204,0,51,0.06);
+      bottom: -4rem; right: -2rem;
+      line-height: 1;
+      pointer-events: none;
+    }
+    .hero-stats {
+      position: relative; z-index: 2;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0;
+      width: 100%;
+    }
+    .stat {
+      padding: 2.5rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .stat:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.08); }
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      color: var(--scarlet);
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+    .stat-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* ── SECTIONS ── */
+    section { padding: 7rem 6rem; }
+    section:nth-child(even) { background: var(--cream); }
+
+    .section-header {
+      display: flex; align-items: center; gap: 1.5rem;
+      margin-bottom: 4rem;
+    }
+    .section-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--scarlet);
+    }
+    h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      letter-spacing: 0.04em;
+      color: var(--charcoal);
+    }
+    .section-line {
+      flex: 1; height: 1px;
+      background: var(--line);
+    }
+
+    /* ── EXPERIENCE CARDS ── */
+    .exp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.5px;
+      background: var(--line);
+      border: 1.5px solid var(--line);
+    }
+    .exp-card {
+      background: var(--off-white);
+      padding: 2.5rem;
+      transition: background 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+    section:nth-child(even) .exp-card { background: var(--cream); }
+    .exp-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 3px; height: 0;
+      background: var(--scarlet);
+      transition: height 0.3s ease;
+    }
+    .exp-card:hover::before { height: 100%; }
+    .exp-card:hover { background: white; }
+    .exp-role {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.05em;
+      color: var(--charcoal);
+      margin-bottom: 0.35rem;
+    }
+    .exp-org {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--scarlet);
+      margin-bottom: 0.25rem;
+    }
+    .exp-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      margin-bottom: 1.25rem;
+    }
+    .exp-bullets { list-style: none; }
+    .exp-bullets li {
+      font-size: 0.875rem;
+      font-weight: 300;
+      color: var(--mid);
+      line-height: 1.65;
+      padding-left: 1rem;
+      position: relative;
+      margin-bottom: 0.5rem;
+    }
+    .exp-bullets li::before {
+      content: '—';
+      position: absolute; left: 0;
+      color: var(--scarlet);
+      font-size: 0.7rem;
+    }
+
+    /* ── ATHLETE FEATURE ── */
+    .athlete-feature {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    .athlete-copy h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 0.04em;
+      margin-bottom: 1rem;
+    }
+    .athlete-copy p {
+      font-weight: 300;
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: var(--mid);
+      margin-bottom: 1.5rem;
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--scarlet);
+      color: #fff;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.45rem 0.9rem;
+    }
+    .commitment-bar {
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .bar-item { display: flex; flex-direction: column; gap: 0.4rem; }
+    .bar-label {
+      display: flex; justify-content: space-between;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .bar-track {
+      height: 4px;
+      background: rgba(0,0,0,0.08);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      background: var(--scarlet);
+      border-radius: 2px;
+      transform-origin: left;
+      animation: grow 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      transform: scaleX(0);
+    }
+    @keyframes grow { to { transform: scaleX(1); } }
+
+    /* ── SERVICE GRID ── */
+    .service-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+    .service-item {
+      padding: 2rem 0;
+      border-top: 2px solid var(--charcoal);
+    }
+    .service-item h4 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.3rem;
+    }
+    .service-item .org {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--scarlet);
+      margin-bottom: 0.75rem;
+    }
+    .service-item p {
+      font-size: 0.875rem;
+      font-weight: 300;
+      line-height: 1.65;
+      color: var(--mid);
+    }
+
+    /* ── SKILLS ── */
+    .skills-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+    .skill-group h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 1.5rem;
+    }
+    .tag-cloud { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+    .tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--line);
+      color: var(--mid);
+      cursor: default;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .tag:hover {
+      border-color: var(--scarlet);
+      color: var(--scarlet);
+      background: rgba(204,0,51,0.04);
+    }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--charcoal);
+      color: white;
+      text-align: center;
+      padding: 8rem 6rem;
+    }
+    #contact .section-num { color: var(--scarlet); }
+    #contact h2 { color: white; font-size: clamp(2.5rem, 6vw, 5rem); margin-bottom: 1rem; }
+    #contact p {
+      font-weight: 300;
+      color: rgba(255,255,255,0.5);
+      font-size: 1rem;
+      margin-bottom: 3rem;
+    }
+    .contact-links {
+      display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;
+    }
+    .contact-link {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      padding: 1rem 2rem;
+      border: 1px solid rgba(255,255,255,0.12);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .contact-link:hover { border-color: var(--scarlet); color: var(--scarlet); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #111;
+      padding: 1.5rem 6rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    footer span {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* ── ANIMATIONS ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      #hero { grid-template-columns: 1fr; }
+      .hero-right { min-height: 300px; }
+      .hero-left { padding: 5rem 2rem 3rem; }
+      section { padding: 4rem 2rem; }
+      .athlete-feature { grid-template-columns: 1fr; gap: 2.5rem; }
+      .service-list { grid-template-columns: 1fr; }
+      .skills-wrap { grid-template-columns: 1fr; gap: 2.5rem; }
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.2rem; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+      #contact { padding: 5rem 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#hero">Jackson <span>Gister</span></a>
+    <ul class="nav-links">
+      <li><a href="#athlete">Athlete</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#service">Service</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero" style="padding:0;">
+    <div class="hero-left">
+      <div class="hero-tag">Rutgers University · Class of 2028</div>
+      <h1>
+        Jackson
+        <span class="line-accent">Gister</span>
+      </h1>
+      <p class="hero-sub">Division I Student-Athlete &amp; Tight End for Rutgers Football. Leader, volunteer, and driven professional in the making.</p>
+      <a href="mailto:jacksongister@gmail.com" class="hero-cta">
+        Get in Touch
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7h10M7 2l5 5-5 5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+    <div class="hero-right">
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-num">D1</div>
+          <div class="stat-label">NCAA Athlete</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">20+</div>
+          <div class="stat-label">Hrs/Week Training</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">TE</div>
+          <div class="stat-label">Tight End</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">RU</div>
+          <div class="stat-label">New Brunswick, NJ</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ATHLETE -->
+  <section id="athlete">
+    <div class="section-header fade-in">
+      <span class="section-num">01</span>
+      <h2>Student-Athlete</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="athlete-feature">
+      <div class="athlete-copy fade-in">
+        <div class="badge">Rutgers Football · Tight End</div>
+        <br/><br/>
+        <h3>Competing at the Highest Level</h3>
+        <p>As a Division I student-athlete at Rutgers Business School, Jackson balances a demanding academic course load with the rigorous commitment of Big Ten football.</p>
+        <p>Since joining the program in June 2024, he has demonstrated the discipline, coachability, and team-first mentality that defines elite athletes.</p>
+      </div>
+      <div class="commitment-bar fade-in">
+        <div style="font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;">Weekly Commitment Breakdown</div>
+        <div class="bar-item">
+          <div class="bar-label"><span>Team Practice</span><span>8 hrs</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:70%;animation-delay:0.1s"></div></div>
+        </div>
+        <div class="bar-item">
+          <div class="bar-label"><span>Film &amp; Meetings</span><span>5 hrs</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:45%;animation-delay:0.2s"></div></div>
+        </div>
+        <div class="bar-item">
+          <div class="bar-label"><span>Strength &amp; Training</span><span>7 hrs</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:60%;animation-delay:0.3s"></div></div>
+        </div>
+        <div class="bar-item">
+          <div class="bar-label"><span>Academic Coursework</span><span>Full Load</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:90%;animation-delay:0.4s"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="section-header fade-in">
+      <span class="section-num">02</span>
+      <h2>Work Experience</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="exp-grid">
+      <div class="exp-card fade-in">
+        <div class="exp-org">Rutgers Football Camp</div>
+        <div class="exp-role">Football Coach</div>
+        <div class="exp-meta">Piscataway, NJ · Summer 2024</div>
+        <ul class="exp-bullets">
+          <li>Coached and supervised male youth ages 14–18 in football skills, with specialized instruction for tight end position players.</li>
+          <li>Performed assessments of incoming campers to ascertain and record measurements and facilitated testing.</li>
+        </ul>
+      </div>
+      <div class="exp-card fade-in">
+        <div class="exp-org">Valley Swim and Tennis Club</div>
+        <div class="exp-role">Lifeguard</div>
+        <div class="exp-meta">Towson, MD · Summers 2021–2023</div>
+        <ul class="exp-bullets">
+          <li>Ensured the safety of members and their guests at a private club, including supervision of large groups for private events.</li>
+          <li>Monitored staffing schedules and maintained the pool and surrounding areas.</li>
+        </ul>
+      </div>
+      <div class="exp-card fade-in">
+        <div class="exp-org">Misty Valley Farms</div>
+        <div class="exp-role">Staff Member</div>
+        <div class="exp-meta">Cockeysville, MD · Nov–Dec 2022</div>
+        <ul class="exp-bullets">
+          <li>Provided seasonal labor for a popular family-owned tree farm during the holiday season.</li>
+          <li>Assisted with tree selection and sales, ensuring safe transport for customers.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICE -->
+  <section id="service">
+    <div class="section-header fade-in">
+      <span class="section-num">03</span>
+      <h2>Service &amp; Leadership</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="service-list">
+      <div class="service-item fade-in">
+        <h4>Volunteer</h4>
+        <div class="org">Special Olympics NJ · Jun 2024</div>
+        <p>Helped run the bocce court event space, assisting athletes and cheering them on at the Ewing, NJ competition.</p>
+      </div>
+      <div class="service-item fade-in">
+        <h4>Regular Volunteer</h4>
+        <div class="org">Ronald McDonald House · 2019–2023</div>
+        <p>Provided ongoing support for families staying at the Baltimore house, including organizing outdoor movies and 5K runs.</p>
+      </div>
+      <div class="service-item fade-in">
+        <h4>Student-Athlete Leadership Team</h4>
+        <div class="org">Towson High · Sep 2020–May 2022</div>
+        <p>Met monthly with student-athletes from all sports to build community and identify challenges faced by student-athletes.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="section-header fade-in">
+      <span class="section-num">04</span>
+      <h2>Skills &amp; Interests</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="skills-wrap">
+      <div class="skill-group fade-in">
+        <h3>Technical Skills</h3>
+        <div class="tag-cloud">
+          <span class="tag">Microsoft Word</span>
+          <span class="tag">Microsoft Excel</span>
+          <span class="tag">Microsoft PowerPoint</span>
+          <span class="tag">Microsoft Office Suite</span>
+        </div>
+      </div>
+      <div class="skill-group fade-in">
+        <h3>Personal Interests</h3>
+        <div class="tag-cloud">
+          <span class="tag">Cooking</span>
+          <span class="tag">Snowboarding</span>
+          <span class="tag">Lacrosse</span>
+          <span class="tag">Lifting</span>
+          <span class="tag">Travel</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" style="background:var(--charcoal);">
+    <div class="section-header fade-in" style="justify-content:center;">
+      <span class="section-num">05</span>
+    </div>
+    <h2 class="fade-in" style="color:white;font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,6vw,5rem);letter-spacing:0.04em;margin-bottom:1rem;">Let's Connect</h2>
+    <p class="fade-in" style="font-weight:300;color:rgba(255,255,255,0.5);font-size:1rem;margin-bottom:3rem;">Rutgers Business School · New Brunswick, NJ</p>
+    <div class="contact-links fade-in">
+      <a href="mailto:jacksongister@gmail.com" class="contact-link">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <rect x="1" y="3" width="12" height="9" rx="1" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M1 4l6 4 6-4" stroke="currentColor" stroke-width="1.2"/>
+        </svg>
+        jacksongister@gmail.com
+      </a>
+      <a href="tel:4438346807" class="contact-link">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 2h3l1.5 3.5-2 1.5a9 9 0 003.5 3.5l1.5-2L13 12v3a1 1 0 01-1 1A11 11 0 011 3a1 1 0 011-1z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+        </svg>
+        443.834.6807
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>© 2024 Jackson Gister</span>
+    <span>Rutgers University · Class of 2028</span>
+  </footer>
+
+  <script>
+    // Intersection Observer for fade-ins
+    const fadeEls = document.querySelectorAll('.fade-in');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    fadeEls.forEach(el => obs.observe(el));
+  </script>
+</body>
+</html>
